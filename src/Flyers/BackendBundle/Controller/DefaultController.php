@@ -1,0 +1,22 @@
+<?php
+
+namespace Flyers\BackendBundle\Controller;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+/**
+ * @Route("/api")
+ */
+class DefaultController extends Controller
+{
+    /**
+     * @Route("/hello")
+     */
+    public function helloAction()
+    {
+        return new JsonResponse(array('world' => 'world'));
+    }
+}
