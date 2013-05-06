@@ -16,7 +16,7 @@ function formatDate(d) {
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('myApp.services', ['ngCookies']).
+angular.module('myApp.services', ['ngCookies', 'ngResource']).
   factory('Base64', function() {
     var keyStr = 'ABCDEFGHIJKLMNOP' +
         'QRSTUVWXYZabcdef' +
@@ -101,43 +101,87 @@ angular.module('myApp.services', ['ngCookies']).
         }
     };
 }).
-  factory('Auth', ['$cookieStore', '$http', 'Base64', function($cookieStore, $http, Base64) {
-    $http.defaults.headers.common['X-WSSE'] = 'UsernameToken Username="'+$cookieStore.get('username')+'", PasswordDigest="'+$cookieStore.get('digest')+'", Nonce="'+$cookieStore.get('nonce')+'", Created="'+$cookieStore.get('created')+'"';
+factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $cookieStore, Base64) {
+    var tokenHandler = {};
+    var token = 'none';
 
-    return {
-      setCredentials: function(username, secret) {
-        var seed = Math.floor( Math.random() * 1000 )+'';
-        var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
+    tokenHandler.set = function( newToken ) {
+        token = newToken;
+    };
 
-        var now = new Date();
+    tokenHandler.get = function() {
+        return token;
+    };
 
-        var created = formatDate(new Date());
+    tokenHandler.getCredentials = function ( username, secret) {
+        if ( (typeof $cookieStore.get('username') !== 'undefined') && 
+             (typeof $cookieStore.get('digest') !== 'undefined') && 
+             (typeof $cookieStore.get('b64nonce') !== 'undefined') && 
+             (typeof $cookieStore.get('created') !== 'undefined') ) 
+        {
+            var username = $cookieStore.get('username');
+            var digest = $cookieStore.get('digest');
+            var b64nonce = $cookieStore.get('b64nonce');
+            var created = $cookieStore.get('created');
+        }
+        else
+        {
+            var seed = Math.floor( Math.random() * 1000 )+'';
+            var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
 
-        var hash = CryptoJS.SHA1(nonce+created+secret);
-        var digest = hash.toString(CryptoJS.enc.Base64);
+            var now = new Date();
 
-        var b64nonce = Base64.encode(nonce);
+            var created = formatDate(new Date());
 
-        $http.defaults.headers.common['X-WSSE'] = 'UsernameToken Username="'+username+'", PasswordDigest="'+digest+'", Nonce="'+b64nonce+'", Created="'+created+'"';
+            var hash = CryptoJS.SHA1(nonce+created+secret);
+            var digest = hash.toString(CryptoJS.enc.Base64);
 
-        $cookieStore.put('username', username);
-        $cookieStore.put('digest', digest);
-        $cookieStore.put('nonce', b64nonce);
-        $cookieStore.put('created', created);
+            var b64nonce = Base64.encode(nonce);
 
-        $http.get('http://localhost/webservices/app_dev.php/api/hello').success(function(data){
-          console.log(data);
-        })
-      },
-      clearCredentials: function() {
+            $cookieStore.put('username', username);
+            $cookieStore.put('digest', digest);
+            $cookieStore.put('nonce', b64nonce);
+            $cookieStore.put('created', created);
+        }
+
+        return 'UsernameToken Username="'+username+'", PasswordDigest="'+digest+'", Nonce="'+b64nonce+'", Created="'+created+'"';
+    };
+
+    tokenHandler.clearCredentials = function () {
         $cookieStore.remove('username');
         $cookieStore.remove('digest');
         $cookieStore.remove('nonce');
         $cookieStore.remove('created');
 
         delete $http.defaults.headers.common['X-WSSE'];
+    };
 
-      }
-    }
-  }]).
+    tokenHandler.wrapActions = function( resource, actions ) {
+        var wrapperResource = resource;
+
+        for ( var i=0; i < actions.length; i++ ) {
+            tokenWrapper( wrapperResource, actions[i] );
+        }
+
+        return wrapperResource;
+    };
+
+    var tokenWrapper = function ( resource, action ) {
+        resource['_'+action] = resource[action];
+        resource[action] = function ( data, success, error ) {
+            $http.defaults.headers.common['X-WSSE'] = tokenHandler.getCredentials('admin', 'adminpass');
+            return resource['_'+action](
+                data,
+                success,
+                error
+            );
+        };
+    };
+    return tokenHandler;
+}]).
+factory('Hello', ['$resource', 'TokenHandler', function($resource, tokenHandler) {
+    var resource = $resource('/angular/app_dev.php/api/hello', {}, { update: {method:'PUT'} });
+    resource = tokenHandler.wrapActions(resource, ['get', 'query', 'update', 'save']);
+    return resource;
+}]).
   value('version', '0.1');

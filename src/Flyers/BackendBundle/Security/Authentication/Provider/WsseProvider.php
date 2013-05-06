@@ -60,6 +60,9 @@ class WsseProvider extends ContainerAware implements AuthenticationProviderInter
         if (file_exists($this->cacheDir.'/'.$nonce) && file_get_contents($this->cacheDir.'/'.$nonce) + 300 > time()) {
             throw new NonceExpiredException('Previously used nonce detected');
         }
+        if ( !is_dir($this->cacheDir) ) {
+            mkdir($this->cacheDir, 0777, true);
+        }
         file_put_contents($this->cacheDir.'/'.$nonce, time());
 
         // Validate Secret
