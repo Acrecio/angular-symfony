@@ -1,3 +1,8 @@
+frontend:
+    resource: "@FrontendBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 backend:
     resource: "@BackendBundle/Controller/"
     type:     annotation
