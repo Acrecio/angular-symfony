@@ -1,18 +1,6 @@
 'use strict';
 
 /* Services */
-function pad(num) {
-    return ("0" + num).slice(-2);
-}
-
-function formatDate(d) {
-    return [d.getUTCFullYear(), 
-            pad(d.getUTCMonth() + 1), 
-            pad(d.getUTCDate())].join("-") + "T" + 
-           [pad(d.getUTCHours()), 
-            pad(d.getUTCMinutes()), 
-            pad(d.getUTCSeconds())].join(":") + "Z";
-}
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
@@ -114,11 +102,13 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
     };
 
     tokenHandler.getCredentials = function ( username, secret) {
+        // Check if token is registered in cookies
         if ( (typeof $cookieStore.get('username') !== 'undefined') && 
              (typeof $cookieStore.get('digest') !== 'undefined') && 
              (typeof $cookieStore.get('b64nonce') !== 'undefined') && 
              (typeof $cookieStore.get('created') !== 'undefined') ) 
         {
+            // Define variables from cookie cache
             var username = $cookieStore.get('username');
             var digest = $cookieStore.get('digest');
             var b64nonce = $cookieStore.get('b64nonce');
@@ -126,36 +116,45 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
         }
         else
         {
+            // Create token for backend communication
             var seed = Math.floor( Math.random() * 1000 )+'';
+            // Encode seed in MD5
             var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
 
-            var now = new Date();
-
+            // Creation time of the token
             var created = formatDate(new Date());
 
+            // Generating digest from secret, creation and seed
             var hash = CryptoJS.SHA1(nonce+created+secret);
             var digest = hash.toString(CryptoJS.enc.Base64);
 
+            // Base64 Encode digest
             var b64nonce = Base64.encode(nonce);
 
+            // Save token in cookies
             $cookieStore.put('username', username);
             $cookieStore.put('digest', digest);
             $cookieStore.put('nonce', b64nonce);
             $cookieStore.put('created', created);
         }
 
+        // Return generated token
         return 'UsernameToken Username="'+username+'", PasswordDigest="'+digest+'", Nonce="'+b64nonce+'", Created="'+created+'"';
     };
 
+    // Token Reinitializer
     tokenHandler.clearCredentials = function () {
+        // Clear token from cache
         $cookieStore.remove('username');
         $cookieStore.remove('digest');
         $cookieStore.remove('nonce');
         $cookieStore.remove('created');
 
+        // Clear token variable
         delete $http.defaults.headers.common['X-WSSE'];
     };
 
+    // Token wrapper for resource actions
     tokenHandler.wrapActions = function( resource, actions ) {
         var wrapperResource = resource;
 
@@ -166,6 +165,7 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
         return wrapperResource;
     };
 
+    // Token wrapper
     var tokenWrapper = function ( resource, action ) {
         resource['_'+action] = resource[action];
         resource[action] = function ( data, success, error ) {
@@ -177,11 +177,41 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
             );
         };
     };
+
+    // Date formater to UTC
+    var formatDate = function (d) {
+        // Padding for date creation
+        var pad = function (num) {
+            return ("0" + num).slice(-2);
+        };
+
+        return [d.getUTCFullYear(), 
+                pad(d.getUTCMonth() + 1), 
+                pad(d.getUTCDate())].join("-") + "T" + 
+               [pad(d.getUTCHours()), 
+                pad(d.getUTCMinutes()), 
+                pad(d.getUTCSeconds())].join(":") + "Z";
+    };
+
     return tokenHandler;
 }]).
 factory('Hello', ['$resource', 'TokenHandler', function($resource, tokenHandler) {
-    var resource = $resource('/angular/app_dev.php/api/hello', {}, { update: {method:'PUT'} });
-    resource = tokenHandler.wrapActions(resource, ['get', 'query', 'update', 'save']);
+    var resource = $resource('/angular/app_dev.php/api/hello');
+    resource = tokenHandler.wrapActions(resource, ['get']);
+    return resource;
+}]).
+factory('Todos', ['$resource', 'TokenHandler', function($resource, tokenHandler){
+    var resource = $resource('/angular/app_dev.php/api/todos', {}, { 
+        query: {method:'GET', params:{}, isArray:true}
+    });
+    resource = tokenHandler.wrapActions(resource, ['get', 'query']);
+    return resource;
+}]).
+factory('Todo', ['$resource', 'TokenHandler', function($resource, tokenHandler){
+    var resource = $resource('/angular/app_dev.php/api/todo', {}, { 
+        update: {method:'PUT'},
+    });
+    resource = tokenHandler.wrapActions(resource, ['get', 'update']);
     return resource;
 }]).
   value('version', '0.1');

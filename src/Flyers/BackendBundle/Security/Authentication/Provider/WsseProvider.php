@@ -22,10 +22,13 @@ class WsseProvider extends ContainerAware implements AuthenticationProviderInter
         $this->cacheDir = $cacheDir;
     }
 
+    // Authenticate webservice client
     public function authenticate( TokenInterface $token )
     {
+        // Load specified user
         $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
+        // Verify Token and register it
         if ($user && $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getPassword())) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
             $authenticatedToken->setUser($user);
@@ -36,12 +39,15 @@ class WsseProvider extends ContainerAware implements AuthenticationProviderInter
         throw new AuthenticationException('The WSSE authentication failed.');
     }
 
+    // Token validator
     public function validateDigest( $digest, $nonce, $created, $secret )
     {
+        // Generate created Token time difference
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
         $then = new \Datetime($created, new \DateTimeZone('UTC'));
         $diff = $now->diff( $then, true );
 
+        // Convert it to seconds
         $seconds =
             ($diff->y * 365 * 24 * 60 * 60) +
                 ($diff->m * 30 * 24 * 60 * 60) +

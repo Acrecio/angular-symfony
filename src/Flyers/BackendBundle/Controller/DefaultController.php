@@ -19,4 +19,16 @@ class DefaultController extends Controller
     {
         return new JsonResponse(array('world' => 'world'));
     }
+
+    /**
+     * @Route("/todos")
+     */
+    public function todosAction()
+    {
+        $todos = array(
+            array('text'=>'learn angular', 'done'=>true),
+            array('text'=>'build an angular app', 'done'=>false),
+            );
+        return new JsonResponse($todos);
+    }
 }
