@@ -42,7 +42,9 @@ class WsseListener implements ListenerInterface
                 try {
                     // Authentication process 
                     $authToken = $this->authenticationManager->authenticate($token);
-                    return $this->securityContext->setToken($authToken);
+                    $this->securityContext->setToken($authToken);
+                    
+                    return;
                 } catch (AuthenticationException $failed) {
                     // ... you might log something here
 
@@ -54,7 +56,6 @@ class WsseListener implements ListenerInterface
                     $response = new Response();
                     $response->setStatusCode(403);
                     $event->setResponse($response);
-
                 }
             }
         }
@@ -63,5 +64,6 @@ class WsseListener implements ListenerInterface
         $response = new Response();
         $response->setStatusCode(403);
         $event->setResponse($response);
+        
     }
 }
