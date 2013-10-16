@@ -12,25 +12,21 @@ Installation
 ------------
 
 Clone the project :
-
-git clone git@github.com:FlyersWeb/angular-symfony.git angular-symfony
+	git clone git@github.com:FlyersWeb/angular-symfony.git angular-symfony
 
 Update packages :
-
-cd angular-symfony
-composer.phar update
+	cd angular-symfony
+	composer.phar update
 
 Create cache and logs folders :
-
-mkdir app/cache
-mkdir app/logs
-chmod -R 777 app/cache
-chmod -R 777 app/logs
+	mkdir app/cache
+	mkdir app/logs
+	chmod -R 777 app/cache
+	chmod -R 777 app/logs
 
 Link project to your webserver and access it :
-
-ln -snf ./ /var/www/html/angular-symfony
-firefox http://localhost/angular-symfony/ &
+	ln -snf ./ /var/www/html/angular-symfony
+	firefox http://localhost/angular-symfony/ &
 
 Authentication system
 ---------------------
