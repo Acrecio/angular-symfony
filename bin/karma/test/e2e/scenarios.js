@@ -4,24 +4,30 @@
 
 describe('my app', function() {
 
+	var ptor;
+
   beforeEach(function() {
-    browser().navigateTo('app_dev.php/');
+  	ptor = protractor.getInstance();
+    ptor.ignoreSynchronization = true;
+    browser.get('app_dev.php/');
   });
 
 
   it('should automatically redirect to /view1 when location hash/fragment is empty', function() {
-    expect(browser().location().url()).toBe("/#/view1");
+    expect(browser.getCurrentUrl()).toMatch("/#/view1");
   });
 
   describe('view1', function() {
 
     beforeEach(function() {
-      browser().navigateTo('#/view1');
+    	ptor = protractor.getInstance();
+			ptor.ignoreSynchronization = true;
+      browser.get('#/view1');
     });
 
 
     it('should render view1 when user navigates to /view1', function() {
-      expect(element('[ng-view] p:first').text()).
+      expect(element.all(by.css('[ng-view] p')).first().getText()).
         toMatch(/partial for view 1/);
     });
 
@@ -31,12 +37,14 @@ describe('my app', function() {
   describe('view2', function() {
 
     beforeEach(function() {
-      browser().navigateTo('#/view2');
+    	ptor = protractor.getInstance();
+			ptor.ignoreSynchronization = true;
+      browser.get('#/view2');
     });
 
 
     it('should render view2 when user navigates to /view2', function() {
-      expect(element('[ng-view] p:first').text()).
+      expect(element.all(by.css('[ng-view] p')).first().getText()).
         toMatch(/partial for view 2/);
     });
 

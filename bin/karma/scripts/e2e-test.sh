@@ -3,7 +3,16 @@
 BASE_DIR=`dirname $0`
 
 echo ""
-echo "Starting Karma Server (http://karma-runner.github.io)"
+echo "Updating WebDriver"
+echo $BASE_DIR
 echo "-------------------------------------------------------------------"
 
-karma start $BASE_DIR/../config/karma-e2e.conf.js $*
+webdriver-manager update
+
+
+echo ""
+echo "Starting Protractor tests"
+echo $BASE_DIR
+echo "-------------------------------------------------------------------"
+
+protractor $BASE_DIR/../config/protractor-conf.js $*
