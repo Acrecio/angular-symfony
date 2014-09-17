@@ -102,6 +102,7 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
     };
 
     tokenHandler.getCredentials = function ( username, secret) {
+        var digest, b64nonce, created;
         // Check if token is registered in cookies
         if ( (typeof $cookieStore.get('username') !== 'undefined') && 
              (typeof $cookieStore.get('digest') !== 'undefined') && 
@@ -109,10 +110,10 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
              (typeof $cookieStore.get('created') !== 'undefined') ) 
         {
             // Define variables from cookie cache
-            var username = $cookieStore.get('username');
-            var digest = $cookieStore.get('digest');
-            var b64nonce = $cookieStore.get('b64nonce');
-            var created = $cookieStore.get('created');
+            username = $cookieStore.get('username');
+            digest = $cookieStore.get('digest');
+            b64nonce = $cookieStore.get('b64nonce');
+            created = $cookieStore.get('created');
         }
         else
         {
@@ -134,7 +135,7 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
             // Save token in cookies
             $cookieStore.put('username', username);
             $cookieStore.put('digest', digest);
-            $cookieStore.put('nonce', b64nonce);
+            $cookieStore.put('b64nonce', b64nonce);
             $cookieStore.put('created', created);
         }
 
