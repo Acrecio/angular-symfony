@@ -36,7 +36,7 @@ class WsseProvider extends ContainerAware implements AuthenticationProviderInter
             return $authenticatedToken;
         }
 
-        throw new AuthenticationException('The WSSE authentication failed.');
+        throw new AuthenticationException('The WSSE authentication failed. For user : '.$user);
     }
 
     // Token validator
@@ -47,19 +47,16 @@ class WsseProvider extends ContainerAware implements AuthenticationProviderInter
         $then = new \Datetime($created, new \DateTimeZone('UTC'));
         $diff = $now->diff( $then, true );
 
-        // Convert it to seconds
-        $seconds =
-            ($diff->y * 365 * 24 * 60 * 60) +
-                ($diff->m * 30 * 24 * 60 * 60) +
-                ($diff->d * 24 * 60 * 60) +
-                ($diff->h * 60 * 60) +
-                ($diff->i * 60) +
-                ($diff->s);
+        // Check created time is not in the future
+        if (strtotime($created) > time()) {
+          throw new AuthenticationException("Back to the future...");
+        }
 
         // Validate timestamp is recent within 5 minutes
+        $seconds = time() - strtotime($created);
         if ( $seconds > 300 )
         {
-            throw new \Exception('Expired timestamp.  Seconds: ' . $seconds);
+            throw new AuthenticationException('Expired timestamp.  Seconds: ' . $seconds);
         }
 
         // Validate nonce is unique within 5 minutes

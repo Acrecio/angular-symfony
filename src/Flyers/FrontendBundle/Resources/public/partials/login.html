@@ -1,0 +1,12 @@
+<p>This is the partial for login.</p>
+
+<p ng-show="salt"><strong>{{ username }}</strong> salt is <em>{{ salt }}</em></p>
+<p ng-show="secret"><strong>{{ username }}</strong> generated secret is <em>{{ secret }}</em></p>
+<p ng-show="secret">You should now have access to API because your're logged in</p>
+
+<p>Please enter a symfony valid user : </p>
+<form ng-submit="getSalt()">
+<input type="text" ng-model="username"  size="30" placeholder="admin"><br>
+<input type="password" ng-model="password"  size="30" placeholder="admin"><br>
+<input class="btn-primary" type="submit" value="login">
+</form>

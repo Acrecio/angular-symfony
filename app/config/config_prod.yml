@@ -27,3 +27,8 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
+        wsse:
+            type: stream
+            path: %kernel.logs_dir%/%kernel.environment%.wsse.log
+            level: error
+            channels: [wsse]

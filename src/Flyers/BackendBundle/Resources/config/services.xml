@@ -29,6 +29,9 @@
             class="Flyers\BackendBundle\Security\Firewall\WsseListener" public="false">
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" />
+            <tag channel="wsse" />
         </service>
     </services>
 </container>

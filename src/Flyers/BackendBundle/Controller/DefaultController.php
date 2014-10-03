@@ -7,28 +7,43 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 /**
- * @Route("/api")
+ * @Route("/")
  */
 class DefaultController extends Controller
 {
     /**
-     * @Route("/hello")
+     * @Route("/{username}/salt", requirements={"username" = "\w+"})
      */
-    public function helloAction()
+    public function saltAction($username)
     {
-        return new JsonResponse(array('world' => 'world'));
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        $user = $userManager->findUserByUsername($username);
+        if ( is_null($user) )
+        {
+            throw new HttpException(400, "Error User Not Found");
+        }
+
+        return new JsonResponse(array('salt' => $user->getSalt()));
     }
 
     /**
-     * @Route("/todos")
+     * @Route("/{username}/info", requirements={"username" = "\w+"})
      */
-    public function todosAction()
+    public function infoAction($username)
     {
-        $todos = array(
-            array('text'=>'learn angular', 'done'=>true),
-            array('text'=>'build an angular app', 'done'=>false),
-            );
-        return new JsonResponse($todos);
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        $user = $userManager->findUserByUsername($username);
+        if ( is_null($user) )
+        {
+            throw new HttpException(400, "Error User Not Found");
+        }
+
+        return new JsonResponse(array('username' => array('salt' => $user->getSalt())));
     }
+
 }

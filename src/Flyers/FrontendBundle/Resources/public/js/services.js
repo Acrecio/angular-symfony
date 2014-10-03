@@ -4,7 +4,7 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('myApp.services', ['ngCookies', 'ngResource']).
+angular.module('myApp.services', ['ngResource']).
   factory('Base64', function() {
     var keyStr = 'ABCDEFGHIJKLMNOP' +
         'QRSTUVWXYZabcdef' +
@@ -89,7 +89,7 @@ angular.module('myApp.services', ['ngCookies', 'ngResource']).
         }
     };
 }).
-factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $cookieStore, Base64) {
+factory('TokenHandler', [ '$http', 'Base64', function($http, Base64) {
     var tokenHandler = {};
     var token = 'none';
 
@@ -102,42 +102,20 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
     };
 
     tokenHandler.getCredentials = function ( username, secret) {
-        var digest, b64nonce, created;
-        // Check if token is registered in cookies
-        if ( (typeof $cookieStore.get('username') !== 'undefined') && 
-             (typeof $cookieStore.get('digest') !== 'undefined') && 
-             (typeof $cookieStore.get('b64nonce') !== 'undefined') && 
-             (typeof $cookieStore.get('created') !== 'undefined') ) 
-        {
-            // Define variables from cookie cache
-            username = $cookieStore.get('username');
-            digest = $cookieStore.get('digest');
-            b64nonce = $cookieStore.get('b64nonce');
-            created = $cookieStore.get('created');
-        }
-        else
-        {
-            // Create token for backend communication
-            var seed = Math.floor( Math.random() * 1000 )+'';
-            // Encode seed in MD5
-            var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
+        // Create token for backend communication
+        var seed = Math.floor( Math.random() * 1000 )+'';
+        // Encode seed in MD5
+        var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
 
-            // Creation time of the token
-            var created = formatDate(new Date());
+        // Creation time of the token
+        var created = formatDate(new Date());
 
-            // Generating digest from secret, creation and seed
-            var hash = CryptoJS.SHA1(nonce+created+secret);
-            var digest = hash.toString(CryptoJS.enc.Base64);
+        // Generating digest from secret, creation and seed
+        var hash = CryptoJS.SHA1(nonce+created+secret);
+        var digest = hash.toString(CryptoJS.enc.Base64);
 
-            // Base64 Encode digest
-            var b64nonce = Base64.encode(nonce);
-
-            // Save token in cookies
-            $cookieStore.put('username', username);
-            $cookieStore.put('digest', digest);
-            $cookieStore.put('b64nonce', b64nonce);
-            $cookieStore.put('created', created);
-        }
+        // Base64 Encode digest
+        var b64nonce = Base64.encode( nonce );
 
         // Return generated token
         return 'UsernameToken Username="'+username+'", PasswordDigest="'+digest+'", Nonce="'+b64nonce+'", Created="'+created+'"';
@@ -170,7 +148,11 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
     var tokenWrapper = function ( resource, action ) {
         resource['_'+action] = resource[action];
         resource[action] = function ( data, success, error ) {
-            $http.defaults.headers.common['X-WSSE'] = tokenHandler.getCredentials('admin', 'adminpass');
+            if ( (typeof data.username != 'undefined') && (typeof data.secret != 'undefined') ) {
+                $http.defaults.headers.common['X-WSSE'] = tokenHandler.getCredentials(data.username, data.secret);
+                delete data.username;
+                delete data.secret;
+            }
             return resource['_'+action](
                 data,
                 success,
@@ -196,20 +178,53 @@ factory('TokenHandler', [ '$http', '$cookieStore', 'Base64', function($http, $co
 
     return tokenHandler;
 }]).
+factory('Salt', ['$resource', function($resource) {
+    // Service to load Salt
+    return $resource('/app_dev.php/:username/salt', {username:'@id'});
+}]).
+factory('Digest', ['$q', function($q) {
+    var factory = {
+        // Symfony SHA512 encryption provider
+        cipher: function(secret, salt) {
+            var deferred = $q.defer();
+
+            var salted = secret + '{' + salt + '}';
+            var digest = CryptoJS.SHA512(salted);
+            for (var i=1; i<5000; i++) {
+                digest = CryptoJS.SHA512(digest+salted);
+            }
+            digest = digest.toString(CryptoJS.enc.Base64);
+
+            deferred.resolve(digest);
+            return deferred.promise;
+        },
+        // Default Symfony plaintext encryption provider
+        plain: function(secret, salt) {
+            var deferred = $q.defer();
+
+            var salted = secret + '{' + salt + '}';
+            var digest = salted;
+            
+            deferred.resolve(digest);
+            return deferred.promise;
+        }
+    };
+    return factory;
+}]).
 factory('Hello', ['$resource', 'TokenHandler', function($resource, tokenHandler) {
-    var resource = $resource('/angular/app_dev.php/api/hello');
+    var resource = $resource('/app_dev.php/api/hello');
     resource = tokenHandler.wrapActions(resource, ['get']);
     return resource;
 }]).
 factory('Todos', ['$resource', 'TokenHandler', function($resource, tokenHandler){
-    var resource = $resource('/angular/app_dev.php/api/todos', {}, { 
+    var resource = $resource('/app_dev.php/api/todos', {}, { 
         query: {method:'GET', params:{}, isArray:true}
     });
     resource = tokenHandler.wrapActions(resource, ['get', 'query']);
     return resource;
 }]).
 factory('Todo', ['$resource', 'TokenHandler', function($resource, tokenHandler){
-    var resource = $resource('/angular/app_dev.php/api/todo', {}, { 
+    var resource = $resource('/app_dev.php/api/todo', {}, { 
         update: {method:'PUT'},
     });
     resource = tokenHandler.wrapActions(resource, ['get', 'update']);

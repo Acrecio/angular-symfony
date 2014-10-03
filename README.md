@@ -18,7 +18,7 @@ Clone the project :
 Update packages :
 
 	cd angular-symfony
-	composer.phar update
+	composer.phar install
 
 Create cache and logs folders :
 
@@ -26,6 +26,19 @@ Create cache and logs folders :
 	mkdir app/logs
 	chmod -R 777 app/cache
 	chmod -R 777 app/logs
+
+Edit database credentials :
+
+  vim app/config/parameters.yml
+
+Update schemas (FOSUserBundle) :
+
+  php app/console doctrine:schema:create
+
+Create and activate user :
+
+  php app/console fos:user:create
+  php app/console fos:user:activate
 
 Link project to your webserver and access it :
 

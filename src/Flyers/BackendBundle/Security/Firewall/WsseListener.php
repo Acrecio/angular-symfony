@@ -9,16 +9,21 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Flyers\BackendBundle\Security\Authentication\Token\WsseUserToken;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class WsseListener implements ListenerInterface
 {
     protected $securityContext;
     protected $authenticationManager;
+    protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
+    public function __construct(SecurityContextInterface $securityContext, 
+                                AuthenticationManagerInterface $authenticationManager,
+                                LoggerInterface $logger)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
+        $this->logger = $logger;
     }
 
     public function handle(GetResponseEvent $event)
@@ -46,17 +51,39 @@ class WsseListener implements ListenerInterface
                     
                     return;
                 } catch (AuthenticationException $failed) {
-                    // ... you might log something here
+                    $failedMessage = 'WSSE Login failed for '.$token->getUsername().'. Why ? '.$failed->getMessage();
+                    $this->logger->err($failedMessage);
 
                     // To deny the authentication clear the token. This will redirect to the login page.
-                    // $this->securityContext->setToken(null);
-                    // return;
+                    // $token = $this->securityContext->getToken();
+                    // if ( $token instanceof WsseUserToken && $this->providerKey === $token->getProviderKey()) {
+                    //     $this->securityContext->setToken(null);
+                    // }
 
                     // Deny authentication with a '403 Forbidden' HTTP response
                     $response = new Response();
                     $response->setStatusCode(403);
+                    $response->setContent($failedMessage);
                     $event->setResponse($response);
+
+                    return;
+                } catch( NonceExpiredException $expired) {
+                    $failedMessage = 'WSSE Nonce Expired for '.$token->getUsername().'. Why ? '.$failed->getMessage();
+                    $this->logger->err($failedMessage);
+
+                    // Deny authentication with a '403 Forbidden' HTTP response
+                    $response = new Response();
+                    $response->setStatusCode(403);
+                    $response->setContent($failedMessage);
+                    $event->setResponse($response);
+
+                    return;
                 }
+
+                // By default deny authorization
+                $response = new Response();
+                $response->setStatusCode(403);
+                $event->setResponse($response);
             }
         }
 

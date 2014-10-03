@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Flyers\BackendBundle\BackendBundle(),
             new Flyers\FrontendBundle\FrontendBundle(),
             new FOS\RestBundle\FOSRestBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
