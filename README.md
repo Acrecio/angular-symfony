@@ -29,16 +29,16 @@ Create cache and logs folders :
 
 Edit database credentials :
 
-  vim app/config/parameters.yml
+	vim app/config/parameters.yml
 
 Update schemas (FOSUserBundle) :
 
-  php app/console doctrine:schema:create
+ 	php app/console doctrine:schema:create
 
 Create and activate user :
 
-  php app/console fos:user:create
-  php app/console fos:user:activate
+	php app/console fos:user:create
+	php app/console fos:user:activate
 
 Link project to your webserver and access it :
 
