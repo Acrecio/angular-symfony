@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', ['ngCookies']).
-  controller('Login', ['$rootScope', '$scope', '$window', 'Salt', 'Digest', function($rootScope, $scope, $window, Salt, Digest) {
+  controller('Login', ['$rootScope', '$scope', '$window', '$cookies', 'Salt', 'Digest', function($rootScope, $scope, $window, $cookies, Salt, Digest) {
     // On Submit function
     $scope.getSalt = function() {
         var username = $scope.username;
@@ -16,6 +16,9 @@ angular.module('myApp.controllers', ['ngCookies']).
                 // Display salt and secret for this example
                 $scope.salt = salt;
                 $scope.secret = secret;
+                // Store auth informations in cookies for page refresh
+                $cookies.username = $scope.username;
+                $cookies.secret = secret;
                 // Store auth informations in rootScope for multi views access
                 $rootScope.userAuth = {username: $scope.username, secret : $scope.secret};
             }, function(err){
@@ -24,7 +27,11 @@ angular.module('myApp.controllers', ['ngCookies']).
         });
     };
   }])
-  .controller('MyCtrl1', ['$rootScope','$scope', '$window', 'Hello', 'Salt', function($rootScope, $scope, $window, Hello, Salt) {
+  .controller('MyCtrl1', ['$rootScope','$scope', '$window', '$cookies', 'Hello', 'Salt', function($rootScope, $scope, $window, $cookies, Hello, Salt) {
+    // If auth information in cookie
+    if ( typeof $cookies.username != "undefined" && typeof $cookies.secret != "undefined" ) {
+        $rootScope.userAuth = {username: $cookies.username, secret : $cookies.secret};
+    }
     // If not authenticated, go to login
     if ( typeof $rootScope.userAuth == "undefined" ) {
         $window.location = '#/login';
@@ -33,7 +40,11 @@ angular.module('myApp.controllers', ['ngCookies']).
     // Simple communication sample, return world
     $scope.hello = Hello.get({username:$rootScope.userAuth.username,secret:$rootScope.userAuth.secret});
   }])
-  .controller('MyCtrl2', ['$rootScope','$scope', '$window', 'Todos', function($rootScope, $scope, $window, Todos) {
+  .controller('MyCtrl2', ['$rootScope','$scope', '$window','$cookies', 'Todos', function($rootScope, $scope, $window, $cookies, Todos) {
+        // If auth information in cookie
+    if ( typeof $cookies.username != "undefined" && typeof $cookies.secret != "undefined" ) {
+        $rootScope.userAuth = {username: $cookies.username, secret : $cookies.secret};
+    }
     // If not authenticated, go to login
     if ( typeof $rootScope.userAuth == "undefined" ) {
         $window.location = '#/login';
