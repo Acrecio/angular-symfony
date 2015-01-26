@@ -28,6 +28,7 @@ angular.module('myApp.controllers', ['ngCookies']).
     // If not authenticated, go to login
     if ( typeof $rootScope.userAuth == "undefined" ) {
         $window.location = '#/login';
+        return;
     }
     // Simple communication sample, return world
     $scope.hello = Hello.get({username:$rootScope.userAuth.username,secret:$rootScope.userAuth.secret});
@@ -36,6 +37,7 @@ angular.module('myApp.controllers', ['ngCookies']).
     // If not authenticated, go to login
     if ( typeof $rootScope.userAuth == "undefined" ) {
         $window.location = '#/login';
+        return;
     }
 
     // Load Todos with secured connection
