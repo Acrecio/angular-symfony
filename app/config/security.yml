@@ -4,7 +4,7 @@ jms_security_extra:
 
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: plaintext
+        FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER

@@ -191,7 +191,7 @@ factory('Digest', ['$q', function($q) {
             var salted = secret + '{' + salt + '}';
             var digest = CryptoJS.SHA512(salted);
             for (var i=1; i<5000; i++) {
-                digest = CryptoJS.SHA512(digest+salted);
+                digest = CryptoJS.SHA512(digest.concat(CryptoJS.enc.Utf8.parse(salted)));
             }
             digest = digest.toString(CryptoJS.enc.Base64);
 
