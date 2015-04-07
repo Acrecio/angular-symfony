@@ -12,7 +12,7 @@ angular.module('myApp.controllers', ['ngCookies']).
         Salt.get({username:username}, function(data){
             var salt = data.salt;
             // Encrypt password accordingly to generate secret
-            Digest.plain(password, salt).then(function(secret){
+            Digest.cipher(password, salt).then(function(secret){
                 // Display salt and secret for this example
                 $scope.salt = salt;
                 $scope.secret = secret;
