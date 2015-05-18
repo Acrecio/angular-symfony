@@ -101,16 +101,24 @@ factory('TokenHandler', [ '$http', 'Base64', function($http, Base64) {
         return token;
     };
 
+    // Generate random string of length
+    tokenHandler.randomString = function(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for(var i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+    };
+
     tokenHandler.getCredentials = function ( username, secret) {
-        // Create token for backend communication
-        var seed = Math.floor( Math.random() * 1000 )+'';
-        // Encode seed in MD5
-        var nonce = CryptoJS.MD5( seed ).toString(CryptoJS.enc.Hex);
+        // Generate nonce
+        var nonce = tokenHandler.randomString(30);
 
         // Creation time of the token
         var created = formatDate(new Date());
 
-        // Generating digest from secret, creation and seed
+        // Generating digest from secret, creation and nonce
         var hash = CryptoJS.SHA1(nonce+created+secret);
         var digest = hash.toString(CryptoJS.enc.Base64);
 
