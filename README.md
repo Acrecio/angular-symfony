@@ -20,13 +20,6 @@ Update packages :
 	cd angular-symfony
 	composer.phar install
 
-Create cache and logs folders :
-
-	mkdir app/cache
-	mkdir app/logs
-	chmod -R 777 app/cache
-	chmod -R 777 app/logs
-
 Edit database credentials :
 
 	vim app/config/parameters.yml
