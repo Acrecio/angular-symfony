@@ -1,0 +1,10 @@
+services:
+    wsse.security.authentication.provider:
+        class: AppBundle\Security\Authentication\Provider\WsseProvider
+        arguments: ["", "%kernel.cache_dir%/security/nonces"]
+
+    wsse.security.authentication.listener:
+        class: AppBundle\Security\Firewall\WsseListener
+        arguments: ["@security.context", "@security.authentication.manager", "@logger"]
+        tags:
+            - { name: monolog.logger, channel: wsse }
