@@ -20,10 +20,6 @@ Update packages :
 	cd angular-symfony
 	composer.phar install
 
-Edit database credentials :
-
-	vim app/config/parameters.yml
-
 Update schemas (FOSUserBundle) :
 
  	php app/console doctrine:schema:create
