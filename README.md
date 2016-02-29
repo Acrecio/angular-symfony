@@ -29,6 +29,10 @@ Create and activate user :
 	php app/console fos:user:create
 	php app/console fos:user:activate
 
+Clean old nonce if necessary :
+
+	php app/console --env=dev escape:wsseauthentication:nonces:delete wsse_secured
+
 Link project to your webserver and access it :
 
 	ln -snf ./ /var/www/html/angular-symfony
@@ -43,7 +47,7 @@ The Authentication system is based on the custom Authentication Provider of the 
 > * Username / Password encryption
 > * Safe guarding against replay attacks
 > * No web server configuration required
-> 
+>
 > WSSE is very useful for the securing of web services, may they be SOAP or REST.
 
 I used the exact same authentication system with a little change in moment of generating the digest, we use the hexadecimal value of the hashed seed in lieu of the binary value.
@@ -61,5 +65,3 @@ Conclusion
 You can use this template and adapt it to your needs.
 
 @FlyersWeb
-
-

@@ -4,8 +4,14 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/escapestudios/EscapeWSSEAuthenticationBundle"
+      }
+    ],
     "require": {
-        "php": ">=5.3.9",
+        "php": ">=5.4",
         "symfony/symfony": "2.7.*",
         "doctrine/orm": "^2.4.8",
         "doctrine/doctrine-bundle": "~1.4",
@@ -21,7 +27,8 @@
         "jms/security-extra-bundle": "^1.5",
         "jms/di-extra-bundle": "^1.5",
         "friendsofsymfony/user-bundle": "1.3.*",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "escapestudios/wsse-authentication-bundle": "2.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
@@ -42,6 +49,7 @@
         "bin-dir": "bin"
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
