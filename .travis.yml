@@ -7,6 +7,7 @@ php:
 
 before_script:
   - phpenv config-rm xdebug.ini
+  - composer self-update
   - composer install
 
 script: phpunit -c app
