@@ -1,0 +1,41 @@
+application:
+    build: ../back-end
+    volumes:
+        - ../back-end:/var/www/html
+client:
+    build: ../front-end
+    volumes:
+        - ../front-end:/var/www/angular
+db:
+    image: mysql
+    ports:
+        - 3306:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: symfony
+php:
+    image: php:5-fpm
+    ports:
+        - 9000:9000
+    volumes_from:
+        - application
+    volumes:
+      - ./php-fpm/symfony.ini:/etc/php5/fpm/conf.d/
+      - ./php-fpm/symfony.ini:/etc/php5/cli/conf.d/
+      - ./php-fpm/symfony.pool.conf:/etc/php5/fpm/pool.d/
+    links:
+        - db
+nginx:
+    image: nginx
+    ports:
+        - 80:80
+        - 8080:8080
+    links:
+        - php
+    volumes_from:
+        - application
+        - client
+    volumes:
+        - ./nginx/logs/:/var/log/nginx
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/symfony.conf:/etc/nginx/conf.d/default.conf
