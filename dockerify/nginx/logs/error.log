@@ -1,2 +1,0 @@
-2016/05/01 14:03:18 [emerg] 1#1: "server" directive is not allowed here in /etc/nginx/nginx.conf:1
-2016/05/01 14:12:08 [error] 8#8: *1 open() "/var/www/html/favicon.ico" failed (2: No such file or directory), client: 172.28.128.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "172.28.128.3"

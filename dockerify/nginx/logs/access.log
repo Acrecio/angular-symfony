@@ -1,8 +1,0 @@
-172.28.128.1 - - [01/May/2016:14:12:07 +0000] "GET / HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:12:08 +0000] "GET /favicon.ico HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:12:15 +0000] "GET /web HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:12:20 +0000] "GET /web/app_dev.php HTTP/1.1" 200 1158 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:13:44 +0000] "GET / HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:13:57 +0000] "GET / HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:14:00 +0000] "GET / HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
-172.28.128.1 - - [01/May/2016:14:14:01 +0000] "GET / HTTP/1.1" 404 169 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0" "-"
