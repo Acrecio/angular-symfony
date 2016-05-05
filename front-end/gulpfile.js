@@ -6,7 +6,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task('dist', function() {
-  gulp.src('src/*')
+  gulp.src('src/**')
     .pipe(gulp.dest('dist/'))
 });
 
