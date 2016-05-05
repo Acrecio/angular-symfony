@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set("UTC");
+
 use Symfony\Component\HttpFoundation\Request;
 
 // If you don't want to setup permissions the proper way, just uncomment the following PHP line

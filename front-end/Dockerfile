@@ -1,3 +1,10 @@
-FROM debian:jessie
+FROM node:5
 
-VOLUME /var/www/angular
+ADD . /var/www
+WORKDIR /var/www
+
+RUN npm install
+RUN npm install -g gulp
+
+EXPOSE 3000
+CMD ["npm", "start"]

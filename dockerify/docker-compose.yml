@@ -5,17 +5,23 @@ application:
     volumes:
         - ../back-end:/var/www
         - ../back-end/web:/var/www/html
-        - ./php-fpm/symfony.ini:/etc/php5/fpm/conf.d/symfony.ini
-        - ./php-fpm/symfony.ini:/etc/php5/cli/conf.d/symfony.ini
+#        - ./php-fpm/php.ini:/etc/php5/fpm/php.ini
+#        - ./php-fpm/php.ini:/etc/php5/cli/php.ini
         - ./php-fpm/symfony.pool.conf:/etc/php5/fpm/pool.d/symfony.pool.conf
         - /var/www/app/cache
         - /var/www/app/logs
     links:
       - db
+
 client:
     build: ../front-end
+    ports:
+      - 3000:3000
     volumes:
         - ../front-end:/var/www/angular
+    links:
+      - nginx-back
+
 db:
     image: mysql
     ports:
@@ -23,15 +29,23 @@ db:
     environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: symfony
-nginx:
+
+nginx-front:
     image: nginx
     ports:
         - 80:80
+    links:
+        - client
+    volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/express.conf:/etc/nginx/conf.d/default.conf
+
+nginx-back:
+    image: nginx
+    ports:
         - 8080:8080
     links:
         - application
-    volumes_from:
-        - client
     volumes:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf
         - ./nginx/symfony.conf:/etc/nginx/conf.d/default.conf

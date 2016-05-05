@@ -3,6 +3,7 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers']).
+  constant('apiUrl', 'http://localhost:8080/')
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/login', {templateUrl: '/bundles/app/partials/login.html', controller: 'Login'});
     $routeProvider.when('/view1', {templateUrl: '/bundles/app/partials/partial1.html', controller: 'MyCtrl1'});

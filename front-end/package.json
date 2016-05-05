@@ -1,0 +1,27 @@
+{
+  "name": "angular-symfony-front",
+  "version": "0.0.1",
+  "description": "Angular Symfony project front end",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp --gulpfile gulpfile.js",
+    "test": "mocha **/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlyersWeb/angular-symfony.git"
+  },
+  "author": "Flyers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FlyersWeb/angular-symfony/issues"
+  },
+  "homepage": "https://github.com/FlyersWeb/angular-symfony#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.0.6"
+  }
+}
