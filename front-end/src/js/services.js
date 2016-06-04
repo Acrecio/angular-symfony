@@ -104,9 +104,9 @@ factory('TokenHandler', [ '$http', 'Base64', function($http, Base64) {
 
     return tokenHandler;
 }]).
-factory('Salt', ['$resource', function($resource) {
+factory('Salt', ['cfg', '$resource', function(cfg, $resource) {
     // Service to load Salt
-    return $resource(':username/salt', {username:'@id'});
+    return $resource(cfg.url+':username/salt', {username:'@id'});
 }]).
 factory('Digest', ['$q', function($q) {
     var factory = {
@@ -137,20 +137,20 @@ factory('Digest', ['$q', function($q) {
     };
     return factory;
 }]).
-factory('Hello', ['$resource', 'TokenHandler', function($resource, tokenHandler) {
-    var resource = $resource('api/hello');
+factory('Hello', ['cfg', '$resource', 'TokenHandler', function(cfg, $resource, tokenHandler) {
+    var resource = $resource(cfg.url+'api/hello');
     resource = tokenHandler.wrapActions(resource, ['get']);
     return resource;
 }]).
-factory('Todos', ['$resource', 'TokenHandler', function($resource, tokenHandler){
-    var resource = $resource('api/todos', {}, {
+factory('Todos', ['cfg', '$resource', 'TokenHandler', function(cfg, $resource, tokenHandler){
+    var resource = $resource(cfg.url+'api/todos', {}, {
         query: {method:'GET', params:{}, isArray:true}
     });
     resource = tokenHandler.wrapActions(resource, ['get', 'query']);
     return resource;
 }]).
-factory('Todo', ['$resource', 'TokenHandler', function($resource, tokenHandler){
-    var resource = $resource('api/todo', {}, {
+factory('Todo', ['cfg', '$resource', 'TokenHandler', function(cfg, $resource, tokenHandler){
+    var resource = $resource(cfg.url+'api/todo', {}, {
         update: {method:'PUT'},
     });
     resource = tokenHandler.wrapActions(resource, ['get', 'update']);

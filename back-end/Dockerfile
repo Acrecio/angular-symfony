@@ -4,6 +4,8 @@ ADD . /var/www
 WORKDIR /var/www
 
 RUN usermod -u 1000 www-data
+RUN mkdir -p /var/www/app/cache
+RUN mkdir -p /var/www/app/logs
 RUN chmod -R 777 /var/www/app/cache
 RUN chmod -R 777 /var/www/app/logs
 
