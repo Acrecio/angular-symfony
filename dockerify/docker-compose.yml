@@ -7,6 +7,7 @@ application:
         - ../back-end/web:/var/www/html
 #        - ./php-fpm/php.ini:/etc/php5/fpm/php.ini
 #        - ./php-fpm/php.ini:/etc/php5/cli/php.ini
+        - ./php-fpm/timezone.ini:/etc/php5/conf.d/timezone.ini
         - ./php-fpm/symfony.pool.conf:/etc/php5/fpm/pool.d/symfony.pool.conf
         - /var/www/app/cache
         - /var/www/app/logs
