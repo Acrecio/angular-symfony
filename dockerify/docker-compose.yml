@@ -1,25 +1,18 @@
 application:
     build: ../back-end
-    ports:
-      - 9000:9000
     volumes:
         - ../back-end:/var/www
         - ../back-end/web:/var/www/html
-#        - ./php-fpm/php.ini:/etc/php5/fpm/php.ini
-#        - ./php-fpm/php.ini:/etc/php5/cli/php.ini
-        - ./php-fpm/timezone.ini:/etc/php5/conf.d/timezone.ini
+        - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
         - ./php-fpm/symfony.pool.conf:/etc/php5/fpm/pool.d/symfony.pool.conf
-        - /var/www/app/cache
-        - /var/www/app/logs
     links:
-      - db
+        - db
 
 client:
     build: ../front-end
-    ports:
-      - 3000:3000
     volumes:
-        - ../front-end:/var/www/angular
+      - ../front-end:/var/www
     links:
       - nginx-back
 
@@ -34,7 +27,7 @@ db:
 nginx-front:
     image: nginx
     ports:
-        - 80:80
+        - 8080:80
     links:
         - client
     volumes:
@@ -44,7 +37,7 @@ nginx-front:
 nginx-back:
     image: nginx
     ports:
-        - 8080:8080
+        - 80:8080
     links:
         - application
     volumes:

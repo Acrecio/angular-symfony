@@ -3,7 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers']).
   constant('cfg', {
-    url: 'http://localhost:8080/',
+    url: location.protocol.concat('//').concat(window.location.hostname).concat('/'),
     httpTimeout: 5000
   }).
   config(['$routeProvider', function($routeProvider) {
