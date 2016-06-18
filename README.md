@@ -11,14 +11,19 @@ This project is a template application with secured communication via a RestFul 
 Installation
 ------------
 
+Install docker and docker-compose, refer to docker documentation.
+
 Clone the project :
 
 	git clone git@github.com:FlyersWeb/angular-symfony.git angular-symfony
 
-Update packages :
+Launch dockerized environment :
 
-	cd angular-symfony
-	composer.phar install
+  docker-compose up -d
+
+Log in application docker image :
+
+  docker exec -it dockerify_application_1 bash
 
 Update schemas (FOSUserBundle) :
 
@@ -26,17 +31,16 @@ Update schemas (FOSUserBundle) :
 
 Create and activate user :
 
-	php app/console fos:user:create
-	php app/console fos:user:activate
+	php app/console fos:user:create admin admin@foo.com admin
+	php app/console fos:user:activate admin
 
 Clean old nonce if necessary :
 
-	php app/console --env=dev escape:wsseauthentication:nonces:delete wsse_secured
+	php app/console escape:wsseauthentication:nonces:delete wsse_secured
 
-Link project to your webserver and access it :
+Access the front end using port 8080 :
 
-	ln -snf ./ /var/www/html/angular-symfony
-	firefox http://localhost/angular-symfony/ &
+	firefox http://localhost:8080 &
 
 Authentication system
 ---------------------

@@ -1,44 +1,46 @@
 # Cache and logs (Symfony2)
-/app/cache/*
-/app/logs/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
+/back-end/app/cache/*
+/back-end/app/logs/*
+!/back-end/app/cache/.gitkeep
+!/back-end/app/logs/.gitkeep
 
-/app/check.php
+/back-end/app/check.php
 
 # Cache and logs (Symfony3)
-/var/cache/*
-/var/logs/*
-!var/cache/.gitkeep
-!var/logs/.gitkeep
+/back-end/var/cache/*
+!/back-end/var/cache/.gitkeep
+/back-end/var/logs/*
+!/back-end/var/logs/.gitkeep
 
 # Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
+/back-end/app/config/parameters.yml
+/back-end/app/config/parameters.ini
 
 # Managed by Composer
-/app/bootstrap.php.cache
-/app/SymfonyRequirements.php
-/var/bootstrap.php.cache
-/bin/*
+/back-end/app/bootstrap.php.cache
+/back-end/app/SymfonyRequirements.php
+/back-end/var/bootstrap.php.cache
+/back-end/bin/*
 !bin/console
 !bin/symfony_requirements
-/vendor/
+/back-end/vendor/
 
 # Assets and user uploads
-/web/bundles/
-/web/uploads/
+/back-end/web/bundles/
+/back-end/web/uploads/
 
 # Assets managed by Bower
-/web/assets/vendor/
+/back-end/web/assets/vendor/
 
 # PHPUnit
-/app/phpunit.xml
-/phpunit.xml
+/back-end/app/phpunit.xml
+/back-end/phpunit.
 
-# Build data
-/build/
+# Dist
+/front-end/dist
 
 # Composer PHAR
-/composer.phar
-/composer.lock
+*composer.phar
+*composer.lock
+
+node_modules
