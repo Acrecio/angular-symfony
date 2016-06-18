@@ -21,6 +21,7 @@ security:
         wsse_secured:
             pattern: ^/api/.*
             stateless: true
+            methods: [GET, POST, PUT]
             wsse:
               realm: "Secured with WSSE"
               profile: "UsernameToken"
