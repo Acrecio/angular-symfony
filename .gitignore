@@ -36,6 +36,9 @@
 /back-end/app/phpunit.xml
 /back-end/phpunit.
 
+# Dist
+/front-end/dist
+
 # Composer PHAR
 *composer.phar
 *composer.lock
