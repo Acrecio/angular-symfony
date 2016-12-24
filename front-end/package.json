@@ -4,7 +4,7 @@
   "description": "Angular Symfony project front end",
   "main": "index.js",
   "scripts": {
-    "start": "gulp --gulpfile gulpfile.js",
+    "start": "node_modules/.bin/gulp --gulpfile gulpfile.js",
     "test": "mocha **/*.spec.js"
   },
   "repository": {

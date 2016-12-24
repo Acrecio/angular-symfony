@@ -37,7 +37,7 @@
 /back-end/phpunit.
 
 # Dist
-/front-end/dist
+/front-end/dist*
 
 # Composer PHAR
 *composer.phar
