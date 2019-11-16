@@ -2,42 +2,42 @@ application:
     build: ../back-end
     volumes:
         - ../back-end:/var/www
-        - ../back-end/web:/var/www/html
-        - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
-        - ./php-fpm/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
-        - ./php-fpm/symfony.pool.conf:/etc/php5/fpm/pool.d/symfony.pool.conf
+        # - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
+        # - ./php-fpm/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
+        # - ./php-fpm/symfony.pool.conf:/usr/local/etc/php-fpm.d/symfony.pool.conf
     links:
-        - db
+        - database
 
 client:
     build: ../front-end
     volumes:
-      - ../front-end:/var/www
+      - '../front-end:/app'
     links:
       - nginx-back
 
-db:
-    image: mysql
+database:
+    image: postgres:10
     ports:
-        - 3306:3306
+        - 5432:5432
     environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: symfony
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_DB: symfony_test
 
 nginx-front:
     image: nginx
     ports:
-        - 8080:80
+        - 8080:8080
     links:
         - client
     volumes:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-        - ./nginx/express.conf:/etc/nginx/conf.d/default.conf
+        - ./nginx/angular.conf:/etc/nginx/conf.d/default.conf
 
 nginx-back:
     image: nginx
     ports:
-        - 80:8080
+        - 8000:8000
     links:
         - application
     volumes:

@@ -4,33 +4,11 @@
 !/back-end/app/cache/.gitkeep
 !/back-end/app/logs/.gitkeep
 
-/back-end/app/check.php
-
-# Cache and logs (Symfony3)
-/back-end/var/cache/*
-!/back-end/var/cache/.gitkeep
-/back-end/var/logs/*
-!/back-end/var/logs/.gitkeep
-
-# Parameters
-/back-end/app/config/parameters.yml
-/back-end/app/config/parameters.ini
-
-# Managed by Composer
-/back-end/app/bootstrap.php.cache
-/back-end/app/SymfonyRequirements.php
-/back-end/var/bootstrap.php.cache
-/back-end/bin/*
-!bin/console
-!bin/symfony_requirements
-/back-end/vendor/
 
 # Assets and user uploads
+/back-end/vendor/
 /back-end/web/bundles/
 /back-end/web/uploads/
-
-# Assets managed by Bower
-/back-end/web/assets/vendor/
 
 # PHPUnit
 /back-end/app/phpunit.xml

@@ -15,7 +15,7 @@ Install docker and docker-compose, refer to docker documentation.
 
 Clone the project :
 
-	git clone git@github.com:FlyersWeb/angular-symfony.git angular-symfony
+  git clone git@github.com:FlyersWeb/angular-symfony.git angular-symfony
 
 Launch dockerized environment :
 
@@ -23,24 +23,19 @@ Launch dockerized environment :
 
 Log in application docker image :
 
-  docker exec -it dockerify_application_1 bash
+  docker-compose exec application bash
 
 Update schemas (FOSUserBundle) :
 
- 	php app/console doctrine:schema:create
+  php bin/console doctrine:schema:create
 
 Create and activate user :
 
-	php app/console fos:user:create admin admin@foo.com admin
-	php app/console fos:user:activate admin
+  php bin/console doctrine:fixtures:load
 
-Clean old nonce if necessary :
+Access the front end using port 4200 :
 
-	php app/console escape:wsseauthentication:nonces:delete wsse_secured
-
-Access the front end using port 8080 :
-
-	firefox http://localhost:8080 &
+  firefox http://localhost:4200 &
 
 Authentication system
 ---------------------
