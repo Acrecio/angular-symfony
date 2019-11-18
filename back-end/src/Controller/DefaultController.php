@@ -42,6 +42,6 @@ class DefaultController extends AbstractController
             throw new HttpException(403, "Error User Bad Password");
         }
 
-        return $this->json(['secret' => $user->getPassword()]);
+        return $this->json(['secret' => $user->getSalt()]);
     }
 }

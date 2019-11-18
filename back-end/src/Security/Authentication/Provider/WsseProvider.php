@@ -27,7 +27,7 @@ class WsseProvider implements AuthenticationProviderInterface
         $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
         // Check digest and replay attempts and return token with user roles
-        if ($user && $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getPassword())) {
+        if ($user && $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getSalt())) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
             $authenticatedToken->setUser($user);
 
@@ -49,15 +49,15 @@ class WsseProvider implements AuthenticationProviderInterface
         if (strtotime($created) > time()) {
             return false;
         }
-
+        
         // Expire timestamp after 5 minutes
         if (time() - strtotime($created) > self::TOKEN_DURATION) {
             return false;
         }
-
+        
         // Try to fetch the cache item from pool
         $cacheItem = $this->cachePool->getItem(md5($nonce));
-
+        
         // Validate that the nonce is *not* in cache
         // if it is, this could be a replay attack
         if ($cacheItem->isHit()) {

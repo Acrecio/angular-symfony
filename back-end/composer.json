@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "friendsofsymfony/rest-bundle": "^2.6",
+        "friendsofsymfony/user-bundle": "^2.0",
         "nelmio/cors-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.3.*",
@@ -34,6 +35,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^4.3",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
         "symfony/web-server-bundle": "4.3.*"

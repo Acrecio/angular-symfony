@@ -2,9 +2,6 @@ application:
     build: ../back-end
     volumes:
         - ../back-end:/var/www
-        # - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
-        # - ./php-fpm/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
-        # - ./php-fpm/symfony.pool.conf:/usr/local/etc/php-fpm.d/symfony.pool.conf
     links:
         - database
 

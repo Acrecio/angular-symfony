@@ -1,4 +1,4 @@
-angular-symfony
+angular-symfony [![Build Status](https://travis-ci.org/FlyersWeb/angular-symfony.svg?branch=upgrade)](https://travis-ci.org/FlyersWeb/angular-symfony)
 ===============
 
 Project Bootstrap for an Angular 2+ and Symfony 4+ webservices project.
@@ -13,7 +13,7 @@ Buy me a coffee
 
 [![Buy me a coffee](https://raw.githubusercontent.com/FlyersWeb/angular-symfony/upgrade/buy-me-a-coffee.png)](https://paypal.me/nac1dbois)
 
-I'm working on this project in my free time and offering it free of charges. To help me work more on this you can help me by sending me a tip.
+I'm working on this project in my free time and offering it free of charges. To help me work more on this you send me tips to buy more coffee :)
 
 Installation
 ------------
@@ -31,6 +31,10 @@ Launch dockerized environment :
 Log in application docker image :
 
 	docker-compose exec application bash
+
+Install dependencies :
+
+	composer install
 
 Update schemas (FOSUserBundle) :
 
