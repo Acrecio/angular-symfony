@@ -1,4 +1,4 @@
-angular-symfony [![Build Status](https://travis-ci.org/FlyersWeb/angular-symfony.svg?branch=upgrade)](https://travis-ci.org/FlyersWeb/angular-symfony)
+angular-symfony [![Build Status](https://travis-ci.org/FlyersWeb/angular-symfony.svg?branch=master)](https://travis-ci.org/FlyersWeb/angular-symfony)
 ===============
 
 Project Bootstrap for an Angular 2+ and Symfony 4+ webservices project.
