@@ -11,7 +11,7 @@ This project is a template application with a secured RestFul API communication 
 Buy me a coffee
 ---------------
 
-[![Buy me a coffee](https://raw.githubusercontent.com/FlyersWeb/angular-symfony/upgrade/buy-me-a-coffee.png)](https://paypal.me/nac1dbois)
+[![Buy me a coffee](https://raw.githubusercontent.com/FlyersWeb/angular-symfony/master/buy-me-a-coffee.png)](https://paypal.me/nac1dbois)
 
 I'm working on this project in my free time and offering it free of charges. To help me work more on this you send me tips to buy more coffee :)
 
