@@ -1,0 +1,29 @@
+<h2>Login Component</h2>
+
+<p [hidden]="!error">Error from server : <strong>{{ error }}</strong></p>
+
+<p [hidden]="!secret"><strong>{{ username }}</strong> generated token at <em>{{ created }}</em> is <em>{{ secret }}</em></p>
+
+<p>Please enter a symfony valid user</p>
+
+<form [formGroup]="credentialsForm" (ngSubmit)="onSubmit()">
+    
+    <label>
+        Username:
+        <input type="text" placeholder="bob" formControlName="username">
+    </label>
+    
+    <label>
+        Password:
+        <input type="password" placeholder="Abc123" formControlName="password">
+    </label>
+    
+    <label>
+        <button type="submit" [disabled]="!credentialsForm.valid">Submit</button>
+    </label>
+
+</form>
+
+<p>Try to access to <a routerLink="/hello" routerLinkActive="active">API</a> after your're logged in.</p>
+
+<p [hidden]="!secret"><button type="button" class="btn-primary" (click)="onLogout()">Logout</button></p>
