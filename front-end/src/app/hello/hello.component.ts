@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { WSSEService } from '../wsse.service'
+import { APIService } from '../api.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { TokenService } from '../token.service'
@@ -16,14 +16,14 @@ export class HelloComponent implements OnInit {
   helloMessage: string
 
   constructor (
-    private wsseService: WSSEService,
+    private apiService: APIService,
     private tokenService: TokenService,
     private router: Router
   ) {}
 
   ngOnInit () {
     // Example API call showing an Hello World
-    this.$hello = this.wsseService.getHello()
+    this.$hello = this.apiService.getHello()
 
     this.$hello.subscribe(
       // Show API response
