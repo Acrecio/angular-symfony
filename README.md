@@ -6,7 +6,7 @@ Project Bootstrap for an Angular 2+ and Symfony 4+ webservices project.
 Introduction
 ------------
 
-This project is a template application with a secured RestFul API communication via WSS UserToken security scheme.
+This project is a template application with a secured RestFul API communication via JWT security scheme.
 
 Buy me a coffee
 ---------------
