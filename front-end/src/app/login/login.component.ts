@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core'
-import { FormGroup, FormControl } from '@angular/forms'
-import { Router } from '@angular/router'
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { WSSEService } from '../wsse.service'
-import { TokenService } from '../token.service'
-import { Observable } from 'rxjs'
-import { flatMap } from 'rxjs/operators'
-import { HttpErrorResponse } from '@angular/common/http'
+import { APIService } from '../api.service';
+import { TokenService } from '../token.service';
+import { Observable } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -14,64 +13,50 @@ import { HttpErrorResponse } from '@angular/common/http'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  $login: Observable<{ secret?: string }>
-  username: string
-  secret: string
-  created: string
-  error: string
+  $login: Observable<{ token?: string }>;
+  token: string;
+  error: string;
 
   credentialsForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl('')
-  })
+  });
 
-  constructor (
-    private wsseService: WSSEService,
+  constructor(
+    private apiService: APIService,
     private tokenService: TokenService,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit () {
-    if (this.tokenService.hasAuthorizationToken()) {
-      this.username = this.tokenService.username
-      this.created = this.tokenService.created
-      this.secret = this.tokenService.secret
-    }
+  ngOnInit() {
+    this.token = this.tokenService.getAuthorizationToken();
   }
 
-  onSubmit () {
-    let credentials: { username: string; password: string } = this
-      .credentialsForm.value
+  onSubmit() {
+    const credentials: { username: string; password: string } = this
+      .credentialsForm.value;
 
-    // Login should return user secret (hashed password)
-    this.$login = this.wsseService.postCredentials(credentials)
+    // Login should return jwt token
+    this.$login = this.apiService.postCredentials(credentials);
 
     this.$login.subscribe(
       // Show generated token
-      ({ secret }) => {
-        this.username = credentials.username
-        this.created = this.tokenService.formatDate(new Date())
-        this.secret = secret
-
-        let authToken = this.tokenService.generateWSSEToken(
-          this.username,
-          this.created,
-          this.secret
-        )
-
-        console.log(`Generated WSSE Token ${authToken}`)
+      ({ token }) => {
+        console.log('Received JWT token', token);
+        this.tokenService.setAuthorizationToken(token);
+        this.token = token;
       },
       // Show server error
       (error: HttpErrorResponse) => {
-        console.error(error)
-        this.error = error.message
+        console.error(error);
+        this.error = error.message;
       }
-    )
+    );
   }
 
-  onLogout () {
-    this.tokenService.cleanAuthorizationToken()
-    this.secret = null
-    return this.router.navigate([''])
+  onLogout() {
+    this.tokenService.cleanAuthorizationToken();
+    this.token = null;
+    return this.router.navigate(['']);
   }
 }

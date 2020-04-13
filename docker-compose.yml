@@ -1,0 +1,42 @@
+application:
+  build: back-end
+  volumes:
+    - "./back-end:/var/www"
+  links:
+    - database
+
+client:
+  build: front-end
+  volumes:
+    - "./front-end:/app"
+  links:
+    - nginx-back
+
+database:
+  image: postgres:10
+  ports:
+    - 5432:5432
+  environment:
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_DB: symfony_dev
+
+nginx-front:
+  image: nginx
+  ports:
+    - 8080:8080
+  links:
+    - client
+  volumes:
+    - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+    - ./config/nginx/angular.conf:/etc/nginx/conf.d/default.conf
+
+nginx-back:
+  image: nginx
+  ports:
+    - 8000:8000
+  links:
+    - application
+  volumes:
+    - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+    - ./config/nginx/symfony.conf:/etc/nginx/conf.d/default.conf

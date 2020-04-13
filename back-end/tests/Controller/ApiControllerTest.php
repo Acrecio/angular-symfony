@@ -6,7 +6,38 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApiControllerTest extends WebTestCase
 {
-    public function testGetHelloWhithoutToken()
+    /**
+     * Create a client with a default Authorization header.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return \Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function createAuthenticatedClient($username = 'user', $password = 'password')
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/login_check',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+        'username' => $username,
+        'password' => $password,
+      ])
+        );
+
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $client = static::createClient();
+        $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
+
+        return $client;
+    }
+
+    public function testGetHelloWithoutToken()
     {
         $client = static::createClient();
 
@@ -15,31 +46,13 @@ class ApiControllerTest extends WebTestCase
         $this->assertEquals(401, $client->getResponse()->getStatusCode());
     }
 
-    public function testGetHelloWhithToken()
+    public function testGetHelloWithToken()
     {
-        $client = static::createClient();
         // User created by running doctrine fixtures
-        $client->request('POST', '/login', ['username' => 'bob', 'password' => 'Abc123']);
-        // Get user secret
-        $content = json_decode($client->getResponse()->getContent(), true);
+        $credentials = ['username' => 'bob', 'password' => 'Abc123'];
 
-        // User created by running doctrine fixtures
-        $username = 'bob';
-        // User secret returned after login
-        $secret = $content['secret'];
-        // Generate a random string to prevent replay attacks
-        $nonce = base64_encode(substr(md5(rand()), 0, 10));
-        // Token work for 5 minutes
-        $created = date("Y-m-d\TH:i:s\Z", strtotime('now -2 minute'));
-        // Generate the shared secret digest
-        $digest = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
-        // X-WSSE header sent
-        $userToken = 'UsernameToken Username="' . $username . '", PasswordDigest="' . $digest . '", Nonce="' . $nonce . '", Created="' . $created . '"';
-
-        $client = static::createClient();
-        $client->request('GET', '/api/hello', [], [], [
-            'HTTP_X-WSSE' => $userToken
-        ]);
+        $client = $this->createAuthenticatedClient($credentials['username'], $credentials['password']);
+        $client->request('GET', '/api/hello');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $content = json_decode($client->getResponse()->getContent(), true);

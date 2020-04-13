@@ -2,6 +2,9 @@ fos_user:
   db_driver: orm
   firewall_name: main
   user_class: App\Entity\User
+  # error The service "security.authentication.provider.dao.main" has a dependency on a non-existent service "fos_user.user_checker".
+  service:
+    mailer: fos_user.mailer.twig_swift
   from_email:
-      address: "contact@company.com"
-      sender_name: "contact@company.com"
+    address: "contact@company.com"
+    sender_name: "contact@company.com"

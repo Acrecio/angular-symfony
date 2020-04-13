@@ -20,13 +20,13 @@ class UserFixtures extends Fixture
     {
         $user = new User();
 
-        $user->setUsername("bob");
-        $user->setUsernameCanonical("Bobby");
-        $user->setEmail("bob@doe.com");
+        $user->setUsername('bob');
+        $user->setUsernameCanonical('Bobby');
+        $user->setEmail('bob@doe.com');
         $user->setEnabled(true);
         // Password is Abc123
-        $user->setSalt("e4TNCCgLvPbDRh7ih+pK58pab0NToFzdZHuPmA0e");
-        $user->setPassword("sM1GM+zlChZH4xlLokuCueeWSDq+4I7XGtn+GErMF1ehMVrFRXWklCK0/LtTZ4gQEebbLW9lrSS0ocA/9/12Gw==");
+        $user->setSalt('e4TNCCgLvPbDRh7ih+pK58pab0NToFzdZHuPmA0e');
+        $user->setPassword('sM1GM+zlChZH4xlLokuCueeWSDq+4I7XGtn+GErMF1ehMVrFRXWklCK0/LtTZ4gQEebbLW9lrSS0ocA/9/12Gw==');
 
         $manager->persist($user);
         $manager->flush();

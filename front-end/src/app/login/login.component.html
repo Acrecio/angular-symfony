@@ -2,7 +2,7 @@
 
 <p [hidden]="!error">Error from server : <strong>{{ error }}</strong></p>
 
-<p [hidden]="!secret"><strong>{{ username }}</strong> generated token at <em>{{ created }}</em> is <em>{{ secret }}</em></p>
+<p [hidden]="!token">Generated token is <br /><em>{{ token }}</em></p>
 
 <p>Please enter a symfony valid user</p>
 
@@ -26,4 +26,4 @@
 
 <p>Try to access to <a routerLink="/hello" routerLinkActive="active">API</a> after your're logged in.</p>
 
-<p [hidden]="!secret"><button type="button" class="btn-primary" (click)="onLogout()">Logout</button></p>
+<p [hidden]="!token"><button type="button" class="btn-primary" (click)="onLogout()">Logout</button></p>
