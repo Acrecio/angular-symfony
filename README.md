@@ -36,6 +36,10 @@ Install dependencies :
 
 	composer install
 
+Create database if necessary :
+
+  php bin/console doctrine:database:create
+
 Update schemas (FOSUserBundle) :
 
 	php bin/console doctrine:schema:create
@@ -51,23 +55,22 @@ Access the front end using port 4200 :
 Authentication system
 ---------------------
 
-The Authentication system is based on the custom Authentication Provider of the [Symfony Cookbook](https://symfony.com/doc/4.4/security/custom_authentication_provider.html)
+The Authentication system is based on the JWT token as implemented by [Lexik](https://github.com/lexik/LexikJWTAuthenticationBundle)
 
-> The following chapter demonstrates how to create a custom authentication provider for WSSE authentication. The security protocol for WSSE provides several security benefits:
-> * Username / Password encryption
-> * Safe guarding against replay attacks
-> * No web server configuration required
->
-> WSSE is very useful for the securing of web services, may they be SOAP or REST.
+User management is done through [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle), you can easily add / edit / delete users by using their API.
 
-I used the exact same authentication system.
+The server provides a Rest API using [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) allowing you to connect using the following query: 
+
+`curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login_check -d '{"username":"bob","password":"Abc123"}'`
 
 Client Side specifics
 ---------------------
 
-On the client side, I've inspired my code from Angular official documentation about HttpInterceptor, allowing me to send the WSS UserToken on each HTTP request when token is available. Examples usually shows how to send the Authorization header.
+On the client side, I've inspired my code from Angular official documentation about HttpInterceptor, allowing me to send the JWT Token on each HTTP request when token is available.
 
-The difference there is that I send the token, username and user digest in the HTTP Header *X-WSSE*.
+The token is sent in *Authorization* headers: 
+
+`Authorization: Bearer xxx`
 
 LICENSE
 -------
