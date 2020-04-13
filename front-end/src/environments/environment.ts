@@ -5,7 +5,7 @@
 export const environment = {
   server: 'http://0.0.0.0:8000',
   production: false
-}
+};
 
 /*
  * For easier debugging in development mode, you can import the following file
