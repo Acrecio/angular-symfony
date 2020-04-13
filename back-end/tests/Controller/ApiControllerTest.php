@@ -6,7 +6,38 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApiControllerTest extends WebTestCase
 {
-    public function testGetHelloWhithoutToken()
+    /**
+     * Create a client with a default Authorization header.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return \Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function createAuthenticatedClient($username = 'user', $password = 'password')
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/login_check',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+        'username' => $username,
+        'password' => $password,
+      ])
+        );
+
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $client = static::createClient();
+        $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
+
+        return $client;
+    }
+
+    public function testGetHelloWithoutToken()
     {
         $client = static::createClient();
 
@@ -15,31 +46,13 @@ class ApiControllerTest extends WebTestCase
         $this->assertEquals(401, $client->getResponse()->getStatusCode());
     }
 
-    public function testGetHelloWhithToken()
+    public function testGetHelloWithToken()
     {
+        // User created by running doctrine fixtures
         $credentials = ['username' => 'bob', 'password' => 'Abc123'];
 
-        $client = static::createClient();
-        // User created by running doctrine fixtures
-        $client->request(
-            'POST',
-            '/api/login_check',
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($credentials)
-        );
-
-        var_dump($client->getResponse()->getContent());
-        // Get user secret
-        $content = json_decode($client->getResponse()->getContent(), true);
-
-        $jwtToken = $content['token'];
-
-        $client = static::createClient();
-        $client->request('GET', '/api/hello', [], [], [
-      'HTTP_Authorization' => "Bearer {$jwtToken}"
-    ]);
+        $client = $this->createAuthenticatedClient($credentials['username'], $credentials['password']);
+        $client->request('GET', '/api/hello');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $content = json_decode($client->getResponse()->getContent(), true);

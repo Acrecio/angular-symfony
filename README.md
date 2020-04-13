@@ -40,7 +40,7 @@ Create database if necessary :
 
   php bin/console doctrine:database:create
 
-Update schemas (FOSUserBundle) :
+Create schemas (FOSUserBundle) :
 
 	php bin/console doctrine:schema:create
 
@@ -51,6 +51,35 @@ Create and activate user :
 Access the front end using port 4200 :
 
 	firefox http://localhost:4200 &
+
+Launching tests
+---------------
+
+If you want to contribute to project you'll need to have tests to pass. So in order to run them you'll need to :
+
+Log in application docker image :
+
+	docker-compose exec application bash
+
+Create database :
+
+  php bin/console doctrine:database:create --env=test
+
+Create schemas (FOSUserBundle) :
+
+	php bin/console doctrine:schema:create --env=test
+
+Create and activate user :
+
+	php bin/console doctrine:fixtures:load --env=test
+
+Copy Phpunit config :
+
+  cp phpunit.xml.dist phpunit.xml
+
+Launch tests using :
+
+  bin/phpunit
 
 Authentication system
 ---------------------

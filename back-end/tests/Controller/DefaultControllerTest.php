@@ -17,9 +17,9 @@ class DefaultControllerTest extends WebTestCase
 
     public function testPostLogin()
     {
+        // User created by running doctrine fixtures
         $credentials = ['username' => 'bob', 'password' => 'Abc123'];
         $client = static::createClient();
-        // User created by running doctrine fixtures
         $client->request(
             'POST',
             '/api/login_check',
@@ -29,9 +29,9 @@ class DefaultControllerTest extends WebTestCase
             json_encode($credentials)
         );
 
+        // Get the user session token
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // Get the user secret (we use the salt because it can be disclosed)
         $content = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals("e4TNCCgLvPbDRh7ih+pK58pab0NToFzdZHuPmA0e", $content['secret']);
+        $this->assertArrayHasKey('token', $content);
     }
 }
