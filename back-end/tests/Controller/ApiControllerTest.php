@@ -17,29 +17,29 @@ class ApiControllerTest extends WebTestCase
 
     public function testGetHelloWhithToken()
     {
+        $credentials = ['username' => 'bob', 'password' => 'Abc123'];
+
         $client = static::createClient();
         // User created by running doctrine fixtures
-        $client->request('POST', '/login', ['username' => 'bob', 'password' => 'Abc123']);
+        $client->request(
+            'POST',
+            '/api/login_check',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode($credentials)
+        );
+
+        var_dump($client->getResponse()->getContent());
         // Get user secret
         $content = json_decode($client->getResponse()->getContent(), true);
 
-        // User created by running doctrine fixtures
-        $username = 'bob';
-        // User secret returned after login
-        $secret = $content['secret'];
-        // Generate a random string to prevent replay attacks
-        $nonce = base64_encode(substr(md5(rand()), 0, 10));
-        // Token work for 5 minutes
-        $created = date("Y-m-d\TH:i:s\Z", strtotime('now -2 minute'));
-        // Generate the shared secret digest
-        $digest = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
-        // X-WSSE header sent
-        $userToken = 'UsernameToken Username="' . $username . '", PasswordDigest="' . $digest . '", Nonce="' . $nonce . '", Created="' . $created . '"';
+        $jwtToken = $content['token'];
 
         $client = static::createClient();
         $client->request('GET', '/api/hello', [], [], [
-            'HTTP_X-WSSE' => $userToken
-        ]);
+      'HTTP_Authorization' => "Bearer {$jwtToken}"
+    ]);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $content = json_decode($client->getResponse()->getContent(), true);

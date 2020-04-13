@@ -17,9 +17,17 @@ class DefaultControllerTest extends WebTestCase
 
     public function testPostLogin()
     {
+        $credentials = ['username' => 'bob', 'password' => 'Abc123'];
         $client = static::createClient();
         // User created by running doctrine fixtures
-        $client->request('POST', '/login', ['username' => 'bob', 'password' => 'Abc123']);
+        $client->request(
+            'POST',
+            '/api/login_check',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode($credentials)
+        );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         // Get the user secret (we use the salt because it can be disclosed)
