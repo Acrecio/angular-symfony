@@ -1,14 +1,14 @@
 application:
-    build: ../back-end
+    build: back-end
     volumes:
-        - ../back-end:/var/www
+        - './back-end:/var/www'
     links:
         - database
 
 client:
-    build: ../front-end
+    build: front-end
     volumes:
-      - '../front-end:/app'
+      - './front-end:/app'
     links:
       - nginx-back
 
@@ -28,8 +28,8 @@ nginx-front:
     links:
         - client
     volumes:
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-        - ./nginx/angular.conf:/etc/nginx/conf.d/default.conf
+        - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./config/nginx/angular.conf:/etc/nginx/conf.d/default.conf
 
 nginx-back:
     image: nginx
@@ -38,5 +38,5 @@ nginx-back:
     links:
         - application
     volumes:
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-        - ./nginx/symfony.conf:/etc/nginx/conf.d/default.conf
+        - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./config/nginx/symfony.conf:/etc/nginx/conf.d/default.conf
